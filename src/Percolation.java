@@ -16,14 +16,14 @@ public class Percolation {
     	this.uf = new WeightedQuickUnionUF(n*n + 2); // grid n*n + virtual top + virtual bottom
     	
     	// connecting virtual top to first row sites
-    	int row = 0;
-    	for (int col = 0; col < n; col++) {
+    	int row = 1;
+    	for (int col = 1; col <= n; col++) {
     		this.uf.union(coordinatesToNumber(row,col,n), 0);
     	}
     	
     	// connecting virtual bottom to last row sites
-    	row = n - 1;
-    	for (int col = 0; col < n; col++) {
+    	row = n;
+    	for (int col = 1; col <= n; col++) {
     		this.uf.union(coordinatesToNumber(row,col,n), n*n + 1);
     	}
     }
@@ -55,22 +55,22 @@ public class Percolation {
     
     /*
      * Given a coordinate (ROW,COLUMN) returns the number corresponding
-     * to this site. Couting starts at site (0,0) = 1 and is incremented
-     * by one moving to left site (0,1) = 2, (0,2) = 3 and so forth.
+     * to this site. Couting starts at site (1,1) = 1 and is incremented
+     * by one moving to left site (1,1) = 2, (1,2) = 3 and so forth.
      * @param row site's row number
      * @param col site's column number
      * @param n size of the grid (n * n)
      * @return the ith site number corresponding to the coordinate provided (ROW,COL)
      */
     private static int coordinatesToNumber(int row, int col, int n) {
-    	return n*row + (col+1);
+    	return n*(row - 1) + col;
     }
 
     /*
      * Given a site number returns the number corresponding coordinate
      * in the format (ROW,COLUMN) to this site. Couting starts at site
-     * (0,0) = 1 and is incremented by one moving to left site (0,1) = 2,
-     * (0,2) = 3 and so forth.
+     * (1,1) = 1 and is incremented by one moving to left site (1,1) = 2,
+     * (1,2) = 3 and so forth.
      * @param siteNumber site's number
      * @param n size of the grid (n * n)
      * @return the coordinate (ROW,COL) corresponding to the site number
@@ -79,8 +79,8 @@ public class Percolation {
     private static int[] numberToCoordinates(int siteNumber, int n) {
         int[] coordinates = new int[2];
         
-        coordinates[0] = (siteNumber % n == 0) ? (siteNumber/n) - 1 : (siteNumber / n); // row
-        coordinates[1] = (siteNumber % n == 0) ? n-1 : (siteNumber % n) - 1; // column
+        coordinates[0] = (siteNumber % n == 0) ? siteNumber/n : (siteNumber / n + 1); // row
+        coordinates[1] = (siteNumber % n == 0) ? n : (siteNumber % n); // column
 
         return coordinates;
     }
@@ -99,10 +99,10 @@ public class Percolation {
     private static int[] getNeighbors(int row, int col, int n) {
     	int[] neighbors = new int[4];
    
-    	neighbors[0] = (row - 1 > -1) ? coordinatesToNumber(row-1, col, n) : -1; // top
-    	neighbors[1] = (col + 1 < n) ? coordinatesToNumber(row, col+1, n) : -1; // right
-    	neighbors[2] = (row + 1 < n) ? coordinatesToNumber(row+1, col, n) : -1; // bottom
-    	neighbors[3] = (col - 1 > -1) ? coordinatesToNumber(row, col-1, n) : -1; // left
+    	neighbors[0] = (row - 1 > 0) ? coordinatesToNumber(row-1, col, n) : -1; // top
+    	neighbors[1] = (col + 1 <= n) ? coordinatesToNumber(row, col+1, n) : -1; // right
+    	neighbors[2] = (row + 1 <= n) ? coordinatesToNumber(row+1, col, n) : -1; // bottom
+    	neighbors[3] = (col - 1 > 0) ? coordinatesToNumber(row, col-1, n) : -1; // left
     	
 		return neighbors;	
     }
