@@ -12,6 +12,11 @@ public class Percolation {
      * @param n size of a grid n * n
      */
     public Percolation(int n) {
+    	
+    	if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
+    	
     	this.gridSize = n;
     	this.uf = new WeightedQuickUnionUF(n*n + 2); // grid n*n + virtual top + virtual bottom
     	
@@ -31,15 +36,28 @@ public class Percolation {
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
     	
+    	if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
+            throw new IllegalArgumentException();
+        }
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
+    	
+    	if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
+            throw new IllegalArgumentException();
+        }
+    	
     	return false;
     }
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
+    	
+    	if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
+            throw new IllegalArgumentException();
+        }
+    	
     	return false;
     }
 
