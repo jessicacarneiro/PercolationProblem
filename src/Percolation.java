@@ -4,9 +4,28 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    // creates n-by-n grid, with all sites initially blocked
+	private WeightedQuickUnionUF uf;
+	private int gridSize;
+	
+    /*
+     * Constructor.
+     * @param n size of a grid n * n
+     */
     public Percolation(int n) {
+    	this.gridSize = n;
+    	this.uf = new WeightedQuickUnionUF(n*n + 2); // grid n*n + virtual top + virtual bottom
     	
+    	// connecting virtual top to first row sites
+    	int row = 0;
+    	for (int col = 0; col < n; col++) {
+    		this.uf.union(coordinatesToNumber(row,col,n), 0);
+    	}
+    	
+    	// connecting virtual bottom to last row sites
+    	row = n - 1;
+    	for (int col = 0; col < n; col++) {
+    		this.uf.union(coordinatesToNumber(row,col,n), n*n + 1);
+    	}
     }
 
     // opens the site (row, col) if it is not open already
