@@ -65,6 +65,28 @@ public class Percolation {
 
         return coordinates;
     }
+    
+    /*
+     * Given a coordinate (ROW,COLUMN) returns the numbers corresponding to the
+     * neighbors of this site. A neighbor is on the top (ROW-1), right (COL+1),
+     * bottom (ROW+1), and left (COL-1).
+     * @param row site's row number
+     * @param col site's column number
+     * @param n size of the grid (n * n)
+     * @return an arrays with 4 numbers corresponding to the site's neighbors (TOP,
+     * RIGHT, BOTTOM, LEFT) in this order. If a site doesn't have a top neighbor,
+     * for example, the first position in the array will be -1. 
+     */
+    private static int[] getNeighbors(int row, int col, int n) {
+    	int[] neighbors = new int[4];
+   
+    	neighbors[0] = (row - 1 > -1) ? coordinatesToNumber(row-1, col, n) : -1; // top
+    	neighbors[1] = (col + 1 < n) ? coordinatesToNumber(row, col+1, n) : -1; // right
+    	neighbors[2] = (row + 1 < n) ? coordinatesToNumber(row+1, col, n) : -1; // bottom
+    	neighbors[3] = (col - 1 > -1) ? coordinatesToNumber(row, col-1, n) : -1; // left
+    	
+		return neighbors;	
+    }
 
     // test client (optional)
     public static void main(String[] args) {
