@@ -6,8 +6,10 @@ public class Percolation {
 
 	private WeightedQuickUnionUF uf;
 	private int gridSize;
+	private int[][] grid;
+	private int openSites;
 	
-    /*
+    /**
      * Constructor.
      * @param n size of a grid n * n
      */
@@ -19,6 +21,7 @@ public class Percolation {
     	
     	this.gridSize = n;
     	this.uf = new WeightedQuickUnionUF(n*n + 2); // grid n*n + virtual top + virtual bottom
+    	this.grid = new int[n][n];
     	
     	// connecting virtual top to first row sites
     	int row = 1;
@@ -33,45 +36,85 @@ public class Percolation {
     	}
     }
 
-    // opens the site (row, col) if it is not open already
+    /**
+     * Open a site by setting its correspoding position in the
+     * grid to 1 and connecting it to its open neighbors.
+     * @param row the row value from 1 to n
+     * @param col the column value from 1 to n
+     */
     public void open(int row, int col) {
     	
     	if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
             throw new IllegalArgumentException();
         }
+    	
+    	this.grid[row-1][col-1] = 1;
+    	this.openSites++;
+    	
+    	int [] neighbors = Percolation.getNeighbors(row, col, this.gridSize);
+
+    	for (int i = 0; i < 4; i++) {
+    		
+    		if (neighbors[i] != -1) {
+    			
+    			int [] neighbor = Percolation.numberToCoordinates(neighbors[i], this.gridSize);
+    			
+    			if (this.isOpen(neighbor[0], neighbor[1])) {
+    				this.uf.union(neighbors[i], Percolation.coordinatesToNumber(row, col, this.gridSize));
+    			}
+    		}
+    	}
     }
 
-    // is the site (row, col) open?
+    /**
+     * Checks if a site is open.
+     * A site is open when its corresponding position in the
+     * grid is set to 1.
+     * @return true if open, false otherwise.
+     */
     public boolean isOpen(int row, int col) {
     	
     	if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
             throw new IllegalArgumentException();
         }
     	
-    	return false;
+    	return this.grid[row-1][col-1] == 1;
     }
 
-    // is the site (row, col) full?
+    /**
+     * Returns true if site is connected to another site in the top.
+     * @param row the row value from 1 to n
+     * @param col the column value from 1 to n
+     * @return
+     */
     public boolean isFull(int row, int col) {
     	
     	if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
             throw new IllegalArgumentException();
         }
     	
-    	return false;
+    	// is connected to virtual top and virtual bottom?
+    	return this.uf.connected(Percolation.coordinatesToNumber(row, col, this.gridSize), 0);
     }
 
-    // returns the number of open sites
+    /**
+     * Returns the number of sites open in the grid.
+     * @return number of open sites
+     */
     public int numberOfOpenSites() {
-    	return 0;
+    	return this.openSites;
     }
 
-    // does the system percolate?
+    /**
+     * Checks if virtual top is connected to virtual bottom,
+     * meaning that the grid system percolates.
+     * @return true if system percolates, false otherwise.
+     */
     public boolean percolates() {
-    	return false;
+    	return this.uf.connected(0, this.gridSize*this.gridSize + 1);
     }
     
-    /*
+    /**
      * Given a coordinate (ROW,COLUMN) returns the number corresponding
      * to this site. Couting starts at site (1,1) = 1 and is incremented
      * by one moving to left site (1,1) = 2, (1,2) = 3 and so forth.
@@ -84,7 +127,7 @@ public class Percolation {
     	return n*(row - 1) + col;
     }
 
-    /*
+    /**
      * Given a site number returns the number corresponding coordinate
      * in the format (ROW,COLUMN) to this site. Couting starts at site
      * (1,1) = 1 and is incremented by one moving to left site (1,1) = 2,
@@ -103,7 +146,7 @@ public class Percolation {
         return coordinates;
     }
     
-    /*
+    /**
      * Given a coordinate (ROW,COLUMN) returns the numbers corresponding to the
      * neighbors of this site. A neighbor is on the top (ROW-1), right (COL+1),
      * bottom (ROW+1), and left (COL-1).
