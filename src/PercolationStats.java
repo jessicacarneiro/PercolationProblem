@@ -5,7 +5,9 @@ public class PercolationStats {
 	
 	// perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
-    	
+    	if (n <= 0 || trials <= 0) {
+    		throw new IllegalArgumentException();
+    	}
     }
 
     // sample mean of percolation threshold
@@ -30,6 +32,13 @@ public class PercolationStats {
 
    // test client (see below)
    public static void main(String[] args) {
+	   int gridSize = Integer.parseInt(args[0]);
+	   int trials = Integer.parseInt(args[1]);
 	   
+	   Percolation p = new Percolation(gridSize);
+	   
+	   for (int i = 0; i < trials; i++) {
+		   
+	   }
    }
 }
