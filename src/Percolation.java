@@ -102,7 +102,8 @@ public class Percolation {
         }
 
         // is connected to virtual top and virtual bottom?
-        return this.uf.connected(Percolation.coordinatesToNumber(row, col, this.gridSize), 0);
+        return this.grid[row-1][col-1] == true &&
+                this.uf.connected(Percolation.coordinatesToNumber(row, col, this.gridSize), 0);
     }
 
     /**
