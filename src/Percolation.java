@@ -2,12 +2,14 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    final private WeightedQuickUnionUF uf;
-    final private int gridSize;
+    private static final int NUMBER_OF_NEIGHBORS = 4;
+    private static final int NUMBER_OF_COORDINATES = 2;
+    
+    private final WeightedQuickUnionUF uf;
+    private final int gridSize;
     private boolean[][] grid;
     private int openSites;
-    public static final int NUMBER_OF_NEIGHBORS = 4;
-    public static final int NUMBER_OF_COORDINATES = 2;
+    
 
     /**
      * Constructor.
@@ -84,7 +86,7 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
 
-        return this.grid[row - 1][col - 1] == true;
+        return this.grid[row - 1][col - 1];
     }
 
     /**
@@ -94,7 +96,6 @@ public class Percolation {
      * @param col the column value from 1 to n
      * @return
      */
-    @SuppressWarnings("deprecation")
     public boolean isFull(int row, int col) {
 
         if (row < 1 || row > this.gridSize || col < 1 || col > this.gridSize) {
@@ -102,8 +103,8 @@ public class Percolation {
         }
 
         // is connected to virtual top and virtual bottom?
-        return this.grid[row-1][col-1] == true &&
-                this.uf.connected(Percolation.coordinatesToNumber(row, col, this.gridSize), 0);
+        return this.grid[row - 1][col - 1]
+                && this.uf.connected(Percolation.coordinatesToNumber(row, col, this.gridSize), 0);
     }
 
     /**
@@ -121,7 +122,6 @@ public class Percolation {
      * 
      * @return true if system percolates, false otherwise.
      */
-    @SuppressWarnings("deprecation")
     public boolean percolates() {
         return this.uf.connected(0, this.gridSize * this.gridSize + 1);
     }
