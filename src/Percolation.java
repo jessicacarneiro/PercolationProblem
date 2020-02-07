@@ -4,12 +4,11 @@ public class Percolation {
 
     private static final int NUMBER_OF_NEIGHBORS = 4;
     private static final int NUMBER_OF_COORDINATES = 2;
-    
+
     private final WeightedQuickUnionUF uf;
     private final int gridSize;
     private boolean[][] grid;
     private int openSites;
-    
 
     /**
      * Constructor.
@@ -26,16 +25,19 @@ public class Percolation {
         this.uf = new WeightedQuickUnionUF(n * n + 2); // grid n*n + virtual top + virtual bottom
         this.grid = new boolean[n][n];
 
-        // connecting virtual top to first row sites
-        int row = 1;
-        for (int col = 1; col <= n; col++) {
-            this.uf.union(coordinatesToNumber(row, col, n), 0);
-        }
+        if (n > 1) {
 
-        // connecting virtual bottom to last row sites
-        row = n;
-        for (int col = 1; col <= n; col++) {
-            this.uf.union(coordinatesToNumber(row, col, n), n * n + 1);
+            // connecting virtual top to first row sites
+            int row = 1;
+            for (int col = 1; col <= n; col++) {
+                this.uf.union(coordinatesToNumber(row, col, n), 0);
+            }
+
+            // connecting virtual bottom to last row sites
+            row = n;
+            for (int col = 1; col <= n; col++) {
+                this.uf.union(coordinatesToNumber(row, col, n), n * n + 1);
+            }
         }
     }
 
@@ -102,9 +104,13 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
 
-        // is connected to virtual top and virtual bottom?
+        if (this.gridSize == 1) {
+            return this.isOpen(row, col);
+        }
+        
+        // is open AND connected to virtual top and virtual bottom?
         return this.grid[row - 1][col - 1]
-                && this.uf.connected(Percolation.coordinatesToNumber(row, col, this.gridSize), 0);
+                && this.uf.connected(0, Percolation.coordinatesToNumber(row, col, this.gridSize));
     }
 
     /**
@@ -123,6 +129,10 @@ public class Percolation {
      * @return true if system percolates, false otherwise.
      */
     public boolean percolates() {
+        if (this.gridSize == 1) {
+            return this.isOpen(1, 1);
+        }
+        
         return this.uf.connected(0, this.gridSize * this.gridSize + 1);
     }
 
