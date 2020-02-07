@@ -6,6 +6,8 @@ public class Percolation {
     final private int gridSize;
     private boolean[][] grid;
     private int openSites;
+    public static final int NUMBER_OF_NEIGHBORS = 4;
+    public static final int NUMBER_OF_COORDINATES = 2;
 
     /**
      * Constructor.
@@ -56,7 +58,7 @@ public class Percolation {
             int[] neighbors = Percolation.getNeighbors(row, col, this.gridSize);
             int site = Percolation.coordinatesToNumber(row, col, this.gridSize);
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < NUMBER_OF_NEIGHBORS; i++) {
 
                 if (neighbors[i] != -1) {
 
@@ -148,7 +150,7 @@ public class Percolation {
      * @return the coordinate (ROW,COL) corresponding to the site number provided
      */
     private static int[] numberToCoordinates(int siteNumber, int n) {
-        int[] coordinates = new int[2];
+        int[] coordinates = new int[NUMBER_OF_COORDINATES];
 
         coordinates[0] = (siteNumber % n == 0) ? siteNumber / n : (siteNumber / n + 1); // row
         coordinates[1] = (siteNumber % n == 0) ? n : (siteNumber % n); // column
@@ -169,7 +171,7 @@ public class Percolation {
      *         neighbor, for example, the first position in the array will be -1.
      */
     private static int[] getNeighbors(int row, int col, int n) {
-        int[] neighbors = new int[4];
+        int[] neighbors = new int[NUMBER_OF_NEIGHBORS];
 
         neighbors[0] = (row - 1 > 0) ? coordinatesToNumber(row - 1, col, n) : -1; // top
         neighbors[1] = (col + 1 <= n) ? coordinatesToNumber(row, col + 1, n) : -1; // right
