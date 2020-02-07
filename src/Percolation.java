@@ -4,7 +4,7 @@ public class Percolation {
 
     final private WeightedQuickUnionUF uf;
     final private int gridSize;
-    private int[][] grid;
+    private boolean[][] grid;
     private int openSites;
 
     /**
@@ -20,7 +20,7 @@ public class Percolation {
 
         this.gridSize = n;
         this.uf = new WeightedQuickUnionUF(n * n + 2); // grid n*n + virtual top + virtual bottom
-        this.grid = new int[n][n];
+        this.grid = new boolean[n][n];
 
         // connecting virtual top to first row sites
         int row = 1;
@@ -50,7 +50,7 @@ public class Percolation {
 
         if (!this.isOpen(row, col)) {
 
-            this.grid[row - 1][col - 1] = 1;
+            this.grid[row - 1][col - 1] = true;
             this.openSites++;
 
             int[] neighbors = Percolation.getNeighbors(row, col, this.gridSize);
@@ -82,7 +82,7 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
 
-        return this.grid[row - 1][col - 1] == 1;
+        return this.grid[row - 1][col - 1] == true;
     }
 
     /**
